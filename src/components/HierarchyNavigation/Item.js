@@ -1,9 +1,18 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import RenderHierachyNavigationItems from "./HierarchyNavigationItems";
 import { ImgItem, DivItem, SpanItem } from "./styles";
+import { navChildTypes, navItemsTypes } from "./types";
 
-export default class Item extends React.Component {
+export default class Item extends Component {
+  static propTypes = {
+    navigationItem: navItemsTypes,
+    childs: navChildTypes,
+    selectedLevel: PropTypes.string,
+    isFirstLevel: PropTypes.bool.isRequired
+  };
+
   state = {
     isShown: false
   };
@@ -28,7 +37,7 @@ export default class Item extends React.Component {
         <RenderHierachyNavigationItems
           selectedLevel={selectedLevel}
           childs={childs}
-          keyy={departmentId}
+          childKey={departmentId}
         />
       );
     } else if (!isFirstLevel && isShown) {
@@ -36,7 +45,7 @@ export default class Item extends React.Component {
         <RenderHierachyNavigationItems
           selectedLevel={selectedLevel}
           childs={childs}
-          keyy={departmentId}
+          childKey={departmentId}
         />
       );
     }
@@ -47,11 +56,9 @@ export default class Item extends React.Component {
       navigationItem: { departmentId, image, name },
       isFirstLevel,
       childs,
-      handleSelectedLevel,
-      selectedLevel
+      handleSelectedLevel
     } = this.props;
 
-    const { isShown } = this.state;
     return (
       <li key={departmentId}>
         <DivItem
