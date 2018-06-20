@@ -17,6 +17,7 @@ export const DivItem = glamorous.div({
   marginBottom: "3px"
 });
 
-export const SpanItem = glamorous.span({
-  padding: "22px 20px 20px 20px"
-});
+export const SpanItem = glamorous.span(({ hasChild }) => ({
+  padding: "22px 20px 20px 20px",
+  color: hasChild ? "black" : "blue"
+}));

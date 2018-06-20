@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import RenderHierachyNavigationItems from "./HierarchyNavigationItems";
+import HierarchyNavigationItems from "./HierarchyNavigationItems";
 import { ImgItem, DivItem, SpanItem } from "./styles";
 import { navChildTypes, navItemsTypes } from "./types";
 
@@ -14,12 +14,21 @@ export default class Item extends Component {
   };
 
   state = {
-    isShown: false
+    isOpen: false
   };
 
-  handleShow = () => {
-    return this.setState(({ isShown }) => ({
-      isShown: !isShown
+  handleShow = id => {
+    if (
+      this.props.isFirstLevel &&
+      this.state.isOpen &&
+      id !== this.props.selectedLevel
+    ) {
+      return this.setState(({ isOpen }) => ({
+        isOpen: true
+      }));
+    }
+    return this.setState(({ isOpen }) => ({
+      isOpen: !isOpen
     }));
   };
 
@@ -30,19 +39,19 @@ export default class Item extends Component {
       childs,
       selectedLevel
     } = this.props,
-    { isShown } = this.state
+    { isOpen } = this.state
   ) => {
-    if (childs && isShown && isFirstLevel && departmentId === selectedLevel) {
+    if (childs && isOpen && isFirstLevel && departmentId === selectedLevel) {
       return (
-        <RenderHierachyNavigationItems
+        <HierarchyNavigationItems
           selectedLevel={selectedLevel}
           childs={childs}
           childKey={departmentId}
         />
       );
-    } else if (!isFirstLevel && isShown) {
+    } else if (!isFirstLevel && isOpen) {
       return (
-        <RenderHierachyNavigationItems
+        <HierarchyNavigationItems
           selectedLevel={selectedLevel}
           childs={childs}
           childKey={departmentId}
@@ -63,12 +72,12 @@ export default class Item extends Component {
       <li key={departmentId}>
         <DivItem
           onClick={() =>
-            (childs && this.handleShow()) ||
+            (childs && this.handleShow(departmentId)) ||
             (isFirstLevel && handleSelectedLevel(departmentId))
           }
         >
           {image && isFirstLevel && <ImgItem src={image} alt={name} />}
-          <SpanItem>{name}</SpanItem>
+          <SpanItem hasChild={childs && true}>{name}</SpanItem>
         </DivItem>
         {this.renderChildren()}
       </li>
