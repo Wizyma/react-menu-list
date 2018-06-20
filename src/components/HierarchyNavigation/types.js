@@ -10,7 +10,7 @@ const navChild = () => ({
           url: PropTypes.string.isRequired,
           image: PropTypes.string
         }),
-        childs: navChild
+        childs: navChildTypes
       })
     })
   )

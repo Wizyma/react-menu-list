@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import HierarchyNavigationItems from "./HierarchyNavigationItems";
-import { ImgItem, DivItem, SpanItem } from "./styles";
+import { ImgItem, DivItem, SpanItem, Wrapper, SpanIcon } from "./styles";
 import { navChildTypes, navItemsTypes } from "./types";
 
 export default class Item extends Component {
@@ -14,21 +14,20 @@ export default class Item extends Component {
   };
 
   state = {
-    isOpen: false
+    isOpen: false,
+    icon: "+"
   };
 
   handleShow = id => {
-    if (
-      this.props.isFirstLevel &&
-      this.state.isOpen &&
-      id !== this.props.selectedLevel
-    ) {
+    const { isFirstLevel, selectedLevel, childs } = this.props;
+    if (isFirstLevel && this.state.isOpen && id !== selectedLevel) {
       return this.setState(({ isOpen }) => ({
         isOpen: true
       }));
     }
-    return this.setState(({ isOpen }) => ({
-      isOpen: !isOpen
+    return this.setState(({ isOpen, icon }) => ({
+      isOpen: !isOpen,
+      icon: !isFirstLevel && childs && icon === "+" ? "-" : "+"
     }));
   };
 
@@ -71,13 +70,30 @@ export default class Item extends Component {
     return (
       <li key={departmentId}>
         <DivItem
+          isFirstLevel={isFirstLevel}
           onClick={() =>
             (childs && this.handleShow(departmentId)) ||
             (isFirstLevel && handleSelectedLevel(departmentId))
           }
         >
-          {image && isFirstLevel && <ImgItem src={image} alt={name} />}
-          <SpanItem hasChild={childs && true}>{name}</SpanItem>
+          <Wrapper>
+            {image && isFirstLevel && <ImgItem src={image} alt={name} />}
+          </Wrapper>
+          <Wrapper isSpanWraper>
+            <SpanItem isFirstLevel={isFirstLevel}>{name}</SpanItem>
+            {childs &&
+              !isFirstLevel && (
+                <Wrapper
+                  isSpanWraper
+                  props={{
+                    position: "absolute",
+                    right: 20
+                  }}
+                >
+                  <SpanIcon>{this.state.icon}</SpanIcon>
+                </Wrapper>
+              )}
+          </Wrapper>
         </DivItem>
         {this.renderChildren()}
       </li>
