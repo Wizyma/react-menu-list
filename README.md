@@ -1,2 +1,5 @@
 # react-menu-list
-Created with CodeSandbox
+
+todo :
+[] should be configurable
+[] should be on npm
